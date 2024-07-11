@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador USAS Symptoms</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schoolbell&display=swap" />
+  <script src="main.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo-container">
+        <img src="images/logo-no-text-brain-symptoms.png" alt="USAS Simulator Logo" class="logo">
+      </div>
+      <h1 class="site-title">Simulador USAS de</h1>
+      <div class="logo-container">
+        <img src="images\logo-text-symptoms.png" alt="USAS Simulator Logo" class="logo">
+      </div>
+    </div>
+  </header>
+  <main>
+    <section class="chart-section">
+      <div class="chart-container">
+          <canvas id="myChart"></canvas>
+      </div>
+        <div class="chart-inputs">
+          <input type="number" id="first" name="first" value="0" min="0" max="10" />
+          <input type="number" id="second" name="second" value="0" min="0" max="10" />
+          <input type="number" id="third" name="third" value="0" min="0" max="10" />
+          <input type="number" id="fourth" name="fourth" value="0" min="0" max="10" />
+          <input type="number" id="fifth" name="fifth" value="0" min="0" max="10" />
+          <input type="number" id="sixth" name="sixth" value="0" min="0" max="10" />
+        </div>
+      </div>
+      <div class="variables">
+        <label for="emotion-threshold">
+          Umbral emoción positiva:
+          <input type="number" id="emotion-threshold" name="emotion-threshold" value="5" min="0" max="10" />
+        </label>
+        <label for="peek-to-last-threshold">
+          Umbral diferencia entre máximo y último USAS:
+          <input type="number" id="peek-to-last-threshold" name="peek-to-last-threshold" value="2" min="0" max="10" />
+        </label>
+      </div>
+    </section>
+    <section class="error-tooltip important-hidden">
+      Los datos introducidos no son correctos.
+    </section>
+    <section id="result-section" class="result-section" hidden>
+      <div class="result-header">
+        <h1>Resultado:</h1>
+        <div class="result successful-tag successful">Exposición positiva 🤗</div>
+        <div class="result neutral-tag neutral" hidden>Exposición neutra 😐</div>
+        <div class="result failed-tag failed" hidden>Exposición fallida 😢</div>
+      </div>
+      <div class="result-explanation">
+        <h2>Variables usadas</h2>
+        <div class="variables-used">
+          <label class="successful neutral failed">
+            Último USAS:
+            <input class="last-usas-value" type="number" readonly value="0" />
+          </label>
+          <label class="successful neutral failed">
+            Umbral emoción positiva:
+            <input class="emotion-threshold-value" type="number" readonly value="5" />
+          </label>
+          <label class="neutral failed">
+            USAS máximo:
+            <input class="peek-usas-value" type="number" readonly value="0" />
+          </label>
+          <label class="neutral failed">
+            Umbral diferencia entre máximo y último USAS:
+            <input class="peek-to-last-threshold-value" type="number" readonly value="2" />
+          </label>
+        </div>
+        <h2>Explicación</h2>
+        <div class="successful">
+          <p>
+            Una exposición exitosa sucede cuando el <em>último USAS</em> es menor que el
+            <em class="emotion-threshold">umbral emoción positiva</em>. Por lo tanto:
+          </p>
+          <section class="blackboard">
+            <p class="formula">
+              Último USAS (<input type="number" class="last-usas-value" readonly value="0" />) &lt; Umbral emoción
+              positiva (<input type="number" class="emotion-threshold-value" readonly value="5" />)
+            </p>
+            <u>Exposición positiva</u>
+          </section>
+        </div>
+        <div class="neutral" hidden>
+          <p>Una exposición neutra sucede cuando las siguientes dos condiciones se cumplen:</p>
+          <ol>
+            <li>El <em>último USAS</em> es mayor o igual a <em>umbral emoción positiva</em></li>
+            <li>
+              La diferencia entre <em>el último USAS</em> y el <em>USAS máximo</em> es igual o mayor a la variable
+              <em>umbral diferencia entre máximo y mínimo</em>
+            </li>
+          </ol>
+          <section class="blackboard">
+            <p class="formula">
+              Último USAS (<input type="number" class="last-usas-value" readonly value="0" />) ≥ Umbral emoción
+              positiva (<input type="number" class="emotion-threshold-value" readonly value="5" />)
+            </p>
+            <p class="formula">
+              USAS Máximo (<input type="number" class="peek-usas-value" readonly value="5" />) - Último USAS (<input
+                type="number"
+                class="last-usas-value"
+                readonly
+                value="0" />) ≥ Diferencia entre máx y último USAS (<input
+                type="number"
+                class="peek-to-last-threshold-value"
+                readonly
+                value="5" />)
+            </p>
+            <u>Exposición neutra</u>
+          </section>
+        </div>
+        <div class="failed" hidden>
+          <p>Una exposición fallida sucede cuando las siguientes condiciones se cumplen:</p>
+          <ol>
+            <li>El <em>último USAS</em> es mayor o igual a <em>umbral emoción positiva</em></li>
+            <li>
+              La diferencia entre <em>el último USAS</em> y el <em>USAS máximo</em> es menor a la variable
+              <em>umbral diferencia entre máximo y mínimo</em>
+            </li>
+          </ol>
+          <section class="blackboard">
+            <p class="formula">
+              Último USAS (<input type="number" class="last-usas-value" readonly value="5" />) ≥ Umbral emoción
+              positiva (<input type="number" class="emotion-threshold-value" readonly value="5" />)
+            </p>
+            <p class="formula">
+              USAS Máximo (<input type="number" class="peek-usas-value" readonly value="5" />) - Último USAS (<input
+                type="number"
+                class="last-usas-value"
+                readonly
+                value="0" />) < Diferencia entre máx y último USAS (<input
+                type="number"
+                class="peek-to-last-threshold-value"
+                readonly
+                value="5" />)
+            </p>
+            <u>Exposición fallida</u>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
