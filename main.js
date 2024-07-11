@@ -115,6 +115,8 @@ document.addEventListener('DOMContentLoaded', function () {
     showResult(evaluationResult);
   };
 
+  updateResult();
+
   inputs.forEach(input => {
     input.addEventListener('input', function () {
       updateChart();

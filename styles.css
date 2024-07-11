@@ -2,6 +2,10 @@
 Reset styles
 */
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 :root {
   --symptoms-main-color: #4ed336;
   --success-color: #50fe99;
@@ -61,7 +65,6 @@ main {
   flex-direction: column;
   gap: 5em;
   padding: 2em 0;
-  height: 100vh;
 }
 
 .chart-section {
