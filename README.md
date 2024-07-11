@@ -1,1 +1,1 @@
-This is a README file created to transfer ownership from @nazarpysko to GeoTecINIT
+This minimalistic website was created to visually showcase the emotions analysis performed in the mobile app. Its ultimate purpose is to eliminate endless meetings with psychologists related to the emotion analysis algorithm.
